@@ -1,0 +1,9 @@
+/* body
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+} */
+#myModal{
+    border: red solid 2px !important;
+}

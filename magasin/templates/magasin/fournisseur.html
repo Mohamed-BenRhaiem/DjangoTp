@@ -1,0 +1,34 @@
+{% extends 'magasin/base.html' %}
+{% block title %} Fournisseur {% endblock title %}
+{% block content %}
+<!-- body -->
+<div class="container-fluid mt-3">
+    <div class="row">
+       <!-- all products -->
+        <div id='products' class="col-lg-9 mx-auto">
+            <div class="row mx-auto">
+                <table class="table">
+                    <thead>
+                        <th>Nom</th>
+                        <th>Adresse</th>
+                        <th>Email</th>
+                        <th>Tel</th>
+                    </thead>
+                        {% for fr in liste %}
+               <tr>
+                 <td>{{fr.nom}}</td>
+                 <td>{{fr.adresse}}</td>
+                 <td>{{fr.email}}</td>
+                 <td>{{fr.telephone}}</td>
+               </tr>     
+                        
+                {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+    <a class="btn btn-outline-primary m-5" href="{% url 'ajoutFournisseur' %}">Nouveau fournisseur</a>
+</div>
+
+{% endblock %}
+

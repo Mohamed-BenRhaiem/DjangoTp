@@ -1,0 +1,141 @@
+{% extends 'magasin/base.html' %}
+{% block title %} Catalogue de produits {% endblock title %}
+{% block content %}
+<style>
+  #myModal{
+    display: flex;
+    justify-content: center;
+    align-items: center ;
+    display: none;
+  }
+  .modal-content{
+    border: black 1px solid;
+    width: 20vw;
+    padding: 10px;
+  }
+  .show{
+    background-color: rgb(35, 35, 35) !important;
+    
+      }
+</style>
+<!-- body -->
+<center>
+
+    <form class="input-group w-25 m-5">
+        <input type="search"
+         class="form-control rounded"
+         placeholder="Search"
+         aria-label="Search"
+         aria-describedby="search-addon"
+        name="libellé" />
+        <button type="submit" class="btn btn-outline-primary" data-mdb-ripple-init>search</button>
+    </form>
+    <a class="btn btn-outline-primary" href="{% url 'addProduct' %}">Nouveau catalogue</a>
+
+</center>
+    
+<div class="container-fluid mt-3">
+    <div class="row">
+       <!-- all products -->
+        <div id='products' class="col-lg-9 mx-auto">
+
+            <div class="mx-auto border "style="display: flex;flex-wrap:wrap;justify-content:space-around">
+               {% for product in list %}
+                <div class="border p-2 m-2"  id={{product.id}} style="width: 18rem;">
+                    <img class="img-card" src='/media/{{ product.img }}' 
+                    class="rounded float-start"  
+                    height="200px" 
+                    width="200px"  
+                       alt="">
+                    <div >
+                        <p class="libelle">{{product.libellé}}</p>
+                        <p class="prix">{{product.prix}}</p>
+                        <p class="description"><b>{{product.desciption}}</b></p>
+                    </div>
+                    <form method="POST" action="{% url 'delete_product' %}" class="delete-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                        <button type="submit" class="btn btn-outline-danger">Supprimer</button>
+                    </form>
+                    <button class="btn btn-outline-success">Modifier</button>
+                 </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Add this HTML structure for the modal popup within the existing HTML -->
+  
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <span style="cursor: pointer;" class="close text-danger fs-3 border w-25">&times;</span>
+      <!-- Form for modifying the product -->
+      <form id="modifyForm" method="POST" action="{% url 'modify_product' %}" class="modify-form">
+        {% csrf_token %}
+        <input type="hidden" id="productId" name="product_id" value="">
+        <!-- Add fields for modifying the product -->
+        <!-- For example: -->
+        <input type="text" id="modifiedName" name="modified_name" placeholder="Modified Name">
+        <input type="text" id="modifiedDescription" name="modified_description" placeholder="Modified Description">
+        <input type="text" id="modifiedPrice" name="modified_price" placeholder="Modified Price">
+        <button type="submit" class="btn btn-outline-primary">Enregistrer</button>
+      </form>
+    </div>
+  </div>
+  
+  <script>
+  // JavaScript to show/hide the modal popup
+  // Get the modal
+  var modal = document.getElementById("myModal");
+  
+  // Get the button that opens the modal
+  var btns = document.querySelectorAll(".btn-outline-success");
+  
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+  
+  // When the user clicks the button, open the modal 
+  btns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelector('body').classList.add('show');
+      
+      var productId = btn.parentElement.id;
+      // Assuming product name and other details are inside the same div, you can retrieve them similarly
+      const productName = btn.parentElement.querySelector(".libelle").textContent;
+      const productDescription = btn.parentElement.querySelector(".description").textContent;
+      const productPrice = btn.parentElement.querySelector(".prix").textContent;
+      // Set values in the form fields
+      document.getElementById("productId").value = productId;
+      document.getElementById("modifiedName").value = productName;
+      document.getElementById("modifiedDescription").value = productDescription;
+      document.getElementById("modifiedPrice").value = productPrice;
+      document.getElementById('myModal').style.display = "block";
+      document.getElementById('myModal').style.display = "flex";
+      document.getElementById('myModal').style.justifyContent = "center";
+      document.getElementById('myModal').style.alignItems = "center";
+      document.getElementById('modal-content').style.width = "20vw";
+    });
+  });
+  
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+    modal.style.display = "none";
+    document.querySelector('body').classList.remove('show')
+  }
+  
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+      document.querySelector('body').classList.remove('show')
+
+    }
+  }
+  </script>
+  
+{% endblock %}
+
